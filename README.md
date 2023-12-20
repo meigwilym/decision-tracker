@@ -1,24 +1,17 @@
-# Decision Maker
+# Decision Tracker
 
-TODO
+Using a youtube video of the match, track your decisions - good or bad - via a handy UI.
 
-Match title, date, comments for any other info
+1. Using a YT video, create a match and set a date
+2. Start the video, click Mark to set the time, then select a Code and add a decision and optional comments.
+3. It's possible to mark the KO and second half KO to show approx game time on the decision list
 
-load in a custom YT video
+Todo
 
-save the data locally. reload data for same video
-
-and to the server
-
-read mode: can only see the data
-edit mode: can add timestamps
-
-edit decision comments
-
-delete decisions
-
-user management
-
-share/read only videos
-
-two different people can create a report on the same video. how to differentiate?
+1. save data centrally (to a server)
+2. Share a tracking session
+3. edit decision comments
+4. delete decisions
+5. user management
+6. share/read only videos
+7. two different people can create a report on the same video. how to differentiate?
