@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Marking from './Screens/Marking';
 import Project from './Screens/Project';
 import useLocalStorageState from 'use-local-storage-state';
@@ -8,13 +8,22 @@ function App() {
 	const [ matchState, setMatchState ] = useState({});
 
 	const handleProjectSave = matchData => {
-		const allWithoutCurrent = appState.filter(p => {
+		const mergedState = appState.filter(p => {
 			return p.ytUrl !== matchData.ytUrl;
-		});
-		const newAppState = allWithoutCurrent.concat(matchData);
-		setAppState(newAppState);
+		}).concat(matchData);
+		setAppState(mergedState);
 		setMatchState(matchData);
 	};
+
+	useEffect(() => {
+		if (!matchState.hasOwnProperty('ytUrl')) {
+			return;
+		}
+		const mergedState = appState.filter(p => {
+			return p.ytUrl !== matchState.ytUrl;
+		}).concat(matchState);
+		setAppState(mergedState);
+	}, [matchState, appState, setAppState]);
 
 	if (matchState.hasOwnProperty('ytUrl')) {
 		return <Marking matchState={ matchState } setMatchState={ setMatchState } />;
