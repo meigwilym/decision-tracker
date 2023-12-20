@@ -1,25 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react';
+import Marking from './Screens/Marking';
+import Project from './Screens/Project';
+import useLocalStorageState from 'use-local-storage-state';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const [ appState, setAppState ] = useLocalStorageState('appState', { defaultValue: [] });
+	const [ matchState, setMatchState ] = useState({});
+
+	const handleProjectSave = matchData => {
+		const allWithoutCurrent = appState.filter(p => {
+			return p.ytUrl !== matchData.ytUrl;
+		});
+		const newAppState = allWithoutCurrent.concat(matchData);
+		setAppState(newAppState);
+		setMatchState(matchData);
+	};
+
+	if (matchState.hasOwnProperty('ytUrl')) {
+		return <Marking matchState={ matchState } setMatchState={ setMatchState } />;
+	} else {
+		return <Project appState={ appState } handleProjectSave={ handleProjectSave } />;
+	}
 }
 
 export default App;
