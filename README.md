@@ -8,6 +8,10 @@ Using a youtube video of the match, track your decisions - good or bad - via a h
 
 Todo
 
+1. A Proper UI
+2. Decisions in a scrolling pane
+3. Filter the decisions by Code
+2. Scroll the decisions with the video timestamp
 1. save data centrally (to a server)
 2. Share a tracking session
 3. edit decision comments
