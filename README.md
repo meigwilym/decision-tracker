@@ -11,6 +11,7 @@ Todo
 1. A Proper UI
 2. Decisions in a scrolling pane
 3. Filter the decisions by Code
+4. Export YouTube Chapters
 2. Scroll the decisions with the video timestamp
 1. save data centrally (to a server)
 2. Share a tracking session

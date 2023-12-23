@@ -1,20 +1,7 @@
 import { useState } from 'react';
-import { secondsToTimeFormat } from './Duration';
 import decisionOptions from '../decisionOptions';
-
-function CodeRadio({ label, value, colour, selected }) {
-	return (
-		<div className="inline mx-1" key={`code_${ value }`}>
-			<input type="radio" id={`code_${ value }`} name="code" value={value} selected={ value === selected ? true : false } className="hidden peer" required />
-			<label htmlFor={`code_${ value }`}
-				className={`peer-checked:border-${ colour }-600 peer-checked:text-${ colour }-600 hover:text-gray-600 hover:bg-gray-100 inline-flex items-center justify-between p-1 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer` }>
-				<div className="block">
-					<div className="w-full">{ label }</div>
-				</div>
-			</label>
-		</div>
-	);
-}
+import MarkTime from './MarkTime';
+import RadioButton from './RadioButton';
 
 function Form({ handleOnSave, timestamp, started }) {
 
@@ -24,8 +11,6 @@ function Form({ handleOnSave, timestamp, started }) {
 		decision: '',
 		comments: ''
 	};
-
-	console.log('Form.started', started);
 
 	// the time must be freshly marked
 	const [ isMarked, setIsMarked ] = useState(false);
@@ -58,34 +43,50 @@ function Form({ handleOnSave, timestamp, started }) {
 	};
 
 	return (
-		<form onSubmit={ onSubmit }>
-			<div className="flex">
-				<div className="flex-inline mb-5">
-					<label htmlFor="timestamp">Timestamp</label>
-					<input readOnly type="text" value={ secondsToTimeFormat(formState.timestamp) } required />
-					<input type="hidden" name="timestamp" value={ formState.timestamp } />
-				</div>
-
-				<fieldset>
-					<label>Code</label>
-					{ decisionOptions.map(option => <CodeRadio key={ option.value } selected={ formState.code } value={ option.value } label={ option.label } colour={ option.colour } />) }
-				</fieldset>
-			</div>
-
-			<div className="flex-block mb-5">
-				<label htmlFor="decision">Decision</label>
-				<input type="text" name="decision" id="decision" required />
-			</div>
-
-			<div className="flex-block mb-5">
-				<label htmlFor="comments">Comments</label>
-				<textarea name="comments" id="comments" />
+		<form className="mt-2" onSubmit={ onSubmit }>
+			<div className="form-control">
+				<label htmlFor="timestamp">Video Time</label>
+				<MarkTime seconds={ formState.timestamp } handleClick={ onMark } />
+				<p className="form-help">Mark the decision's timecode from the video</p>
+				<input type="hidden" name="timestamp" value={ formState.timestamp } />
 			</div>
 
 			<div>
-				<button onClick={ onMark } type="button" id="mark" disabled={ !started }>Mark</button>
-				<button type="submit" name="save" id="save" disabled={ !started && !isMarked }>Save</button>
+				<fieldset>
+					<label className="block">Code</label>
+					<ul class="menu menu-vertical lg:menu-horizontal bg-base-200 rounded-box">
+					{ decisionOptions.map(option => <li><RadioButton key={ option.value } selected={ formState.code } value={ option.value } label={ option.label } /></li>) }
+					</ul>
+				</fieldset>
 			</div>
+
+			<div className="form-control">
+				<label htmlFor="decision" className="label">Decision</label>
+				<input type="text" name="decision" id="decision" className="input input-sm input-bordered input-primary w-full" required />
+				<p className="form-help">Mark the decision and offence, e.g. "Penalty advantage: offside"</p>
+			</div>
+
+			<div className="grid grid-cols-8 gap-4">
+
+				<div className="col-span-6 ">
+					<div className="form-control">
+						<label htmlFor="comments" className="label">Comments</label>
+						<p className="form-help">Any comments for your coach or assesor</p>
+						<textarea name="comments" id="comments" className="textarea textarea-sm textarea-bordered w-full" />
+
+					</div>
+				</div>
+				<div className="col-span-2 ">
+					<div className="form-control content-end">
+						<button className="btn btn-primary" type="submit" name="save" id="save" disabled={ !started && !isMarked }>Save</button>
+					</div>
+				</div>
+
+			</div>
+
+
+
+
 		</form>
 	);
 }

@@ -9,7 +9,6 @@ export default function Duration ({ className, seconds }) {
 }
 
 export function secondsToTimeFormat (seconds) {
-	console.log('seconds to time', seconds)
 	const date = new Date(seconds * 1000)
 	const hh = date.getUTCHours()
 	const mm = date.getUTCMinutes() + (hh * 60);

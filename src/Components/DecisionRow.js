@@ -20,21 +20,21 @@ function DecisionRow({ decision, kickOff, secondHalfKo, handleJumpToTimestamp })
 	}
 
 	return (<tr id={ decision.timestamp } className={ decisionBackground }>
-		<td className="">
-			<button type="button" onClick={ jump } title={`Jump to ${secondsToTimeFormat(decision.timestamp)}`}>
+		<td>
+			<button type="button" className="link" onClick={ jump } title={`Jump to ${secondsToTimeFormat(decision.timestamp)}`}>
 				<Duration seconds={ decision.timestamp } />
 			</button>
 		</td>
-		<td className="border border-slate-300 font-semibold p-4 text-slate-900 text-left">
+		<td>
 			<Duration seconds={ matchTime } />
 		</td>
-		<td className="border border-slate-300 font-semibold p-4 text-slate-900 text-left">
+		<td>
 			{ selectedDecision.label }
 		</td>
-		<td className="border border-slate-300 font-semibold p-4 text-slate-900 text-left">
+		<td>
 			{ decision.decision }
 		</td>
-		<td className="border border-slate-300 font-semibold p-4 text-slate-900 text-left">
+		<td>
 			{ decision.comments }
 		</td>
 	</tr>);

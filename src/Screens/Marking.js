@@ -3,17 +3,18 @@ import { useRef } from 'react';
 import ReactPlayer from 'react-player';
 import Form from '../Components/Form';
 import DecisionList from '../Components/DecisionList';
-import { secondsToTimeFormat } from '../Components/Duration';
+import Aside from '../Components/Aside';
+import ListToggle from '../Components/ListToggle';
+import MarkTime from '../Components/MarkTime';
 // import CsvDownloadButton from 'react-json-to-csv';
 
 function Marking({ matchState, setMatchState }) {
-
-	console.log('Marking matchState', matchState)
 
 	const playerRef = useRef(null);
 
 	const [ timestamp, setTimestamp ] = useState(0);
 	const [ started, setStarted ] = useState(false);
+	const [ codeFilters, setCodeFilters ] = useState([]);
 
 	// save a record
 	const handleOnSave = data => {
@@ -27,50 +28,62 @@ function Marking({ matchState, setMatchState }) {
 	const handleJumpToTimestamp = seconds => playerRef.current.seekTo(seconds);
 
 	const handleSetKickOffTime = () => {
-		console.log('timestamp', timestamp, { ...matchState, kickOff: timestamp});
 		setMatchState({ ...matchState, kickOff: timestamp});
 	};
 	const handleSetSecondHalfKoTime = () => setMatchState({ ...matchState, secondHalfKo: timestamp});
 
-	return (
-		<div>
-			<header>
-				<h1 className="text-3xl font-bold">Decision Tracker</h1>
-				<div className="flex">
-					<div className="w-1/2">
-						<h2 className="text-2xl font-bold">{ matchState.title }</h2>
-						<h3 className="text-xl">{ matchState.matchDate.toLocaleString('en-gb', { weekday:"long", year:"numeric", month:"short", day:"numeric" }) }</h3>
-					</div>
-					<div className="w-1/2">
-						<div>
-							<input type="text" readOnly value={ secondsToTimeFormat(matchState.kickOff) } className="rounded-none rounded-l-lg inline w-1/2" />
-							<button type="button" onClick={ handleSetKickOffTime } className="rounded-r-lg">Kick Off Time</button>
-						</div>
-						<div>
-							<input type="text" readOnly value={ secondsToTimeFormat(matchState.secondHalfKo) } className="rounded-none rounded-l-lg inline w-1/2" />
-							<button type="button" onClick={ handleSetSecondHalfKoTime } className="rounded-r-lg">Second Half Time</button>
-						</div>
-					</div>
-				</div>
-			</header>
+	const newMatch = () => setMatchState({});
 
-			<div className="flex">
-				<div >
-					<ReactPlayer
-						ref={playerRef}
-						url={matchState.ytUrl}
-						controls={true}
-						onProgress={ handleProgress }
-						onStart={() => { setStarted(true);console.log('on start', started); } }
-					/>
+	return (
+
+		<div className="flex">
+
+			<Aside>
+				<div className="mt-4">
+					<label className="mb-1">Kick Off Time</label>
+					<MarkTime seconds={ matchState.kickOff } handleClick={ handleSetKickOffTime } />
 				</div>
-				<div className="ml-2">
-					<Form handleOnSave={ handleOnSave } timestamp={ timestamp } started={ started } />
+				<div className="mt-4">
+					<label className="mb-1">Second Half KO Time</label>
+					<MarkTime seconds={ matchState.secondHalfKo } handleClick={ handleSetSecondHalfKoTime } />
+				</div>
+
+
+			</Aside>
+
+			<div className="w-full flex flex-col h-screen overflow-y-hidden px-2">
+
+				<header className="w-full py-2 flex">
+					<div class="flex-1">
+						<h2 className="text-2xl font-bold">{ matchState.title }</h2>
+						<h3 className="text-l">{ matchState.matchDate.toLocaleString('en-gb', { weekday:"long", year:"numeric", month:"short", day:"numeric" }) }</h3>
+					</div>
+					<div class="flex-none">
+						<button type="button" className="btn btn-accent btn-sm" onClick={ newMatch }>New Match</button>
+					</div>
+				</header>
+
+				<div className="w-full border-t ">
+					<div className="flex flex-row">
+						<div id="react-player">
+							<ReactPlayer
+								ref={playerRef}
+								url={matchState.ytUrl}
+								controls={true}
+								onProgress={ handleProgress }
+								onStart={ () => setStarted(true) }
+							/>
+						</div>
+						<div className="w-full mx-2">
+							<Form handleOnSave={ handleOnSave } timestamp={ timestamp } started={ started } />
+						</div>
+					</div>
+
+				</div>
+				<div className="overflow-x-hidden">
+					<DecisionList matchState={ matchState } handleJumpToTimestamp={ handleJumpToTimestamp } codeFilters={ codeFilters } />
 				</div>
 			</div>
-
-			<DecisionList matchState={ matchState } handleJumpToTimestamp={ handleJumpToTimestamp } />
-
 		</div>
 	);
 }
